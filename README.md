@@ -1,91 +1,91 @@
 # LLMImplementation
 
-Repositorio de práctica para **familiarizarse con LangChain** a partir del tutorial oficial **LangChain LLM Chain Quickstart**:  
+Practice repository to **get familiar with LangChain** based on the official **LangChain LLM Chain Quickstart** tutorial:  
 https://docs.langchain.com/oss/python/langchain/quickstart
 
-A partir de esa base, este repo adapta el flujo para trabajar **con un modelo local vía Ollama** (en vez de Claude), ya que la API de Claude requiere pago para funcionar.
+Building on that foundation, this repo adapts the workflow to use **a local model via Ollama** (instead of Claude), since the Claude API requires a paid plan for real usage.
 
-## Contenido del repositorio
+## Repository Contents
 
-- `LLMChainTutorial.ipynb`: Notebook principal con el desarrollo paso a paso.
-- `README.md`: Este archivo.
+- `LLMChainTutorial.ipynb`: Main notebook with the step-by-step implementation.
+- `README.md`: This file.
 
-## ¿Qué se implementa en el notebook?
+## What is implemented in the notebook?
 
-El notebook recorre un flujo incremental (tipo tutorial) para construir un agente con LangChain:
+The notebook follows an incremental tutorial-style flow to build an agent with LangChain:
 
-1. **Instalación de dependencias**
-   - Instala y actualiza paquetes de LangChain y el conector a Ollama:
+1. **Dependency installation**
+   - Installs and updates LangChain packages and the Ollama connector:
      - `langchain`
      - `langchain-community`
      - `langchain_ollama`
 
-2. **Agente básico con una herramienta custom**
-   - Define una tool simple (`get_weather`) usando `@tool`
-   - Crea un agente con `create_agent`
-   - Conecta un modelo local usando `ChatOllama`
-   - Ejecuta un `agent.invoke(...)` para probar el ciclo *usuario → tool → respuesta*
+2. **Basic agent with a custom tool**
+   - Defines a simple tool (`get_weather`) using `@tool`
+   - Creates an agent with `create_agent`
+   - Connects a local model using `ChatOllama`
+   - Runs `agent.invoke(...)` to test the *user → tool → response* cycle
 
-3. **System prompt (instrucciones del agente)**
-   - Define el comportamiento del agente mediante un `SYSTEM_PROMPT`
-   - Se enfatiza cuándo debe usar herramientas para resolver solicitudes del usuario
+3. **System prompt (agent instructions)**
+   - Defines agent behavior through a `SYSTEM_PROMPT`
+   - Emphasizes when the agent should use tools to solve user requests
 
-4. **Tools con contexto de usuario (runtime context)**
-   - Define un `Context` (dataclass) para pasar información en tiempo de ejecución (por ejemplo `user_id`)
-   - Implementa una tool que recibe `ToolRuntime[Context]` para acceder a ese contexto
+4. **Tools with user context (runtime context)**
+   - Defines a `Context` (dataclass) to pass runtime information (for example, `user_id`)
+   - Implements a tool that receives `ToolRuntime[Context]` to access that context
 
-5. **Configuración del modelo local**
-   - Ejemplo con **Qwen 2.5** en Ollama:
+5. **Local model configuration**
+   - Example with **Qwen 2.5** in Ollama:
      - `model="qwen2.5:7b"`
-   - Nota: el nombre debe coincidir con lo que te muestre `ollama list`
+   - Note: the name must match what `ollama list` shows
 
-6. **Salida estructurada (structured output)**
-   - Define un esquema de salida usando dataclasses (ej. `ResponseFormat`)
-   - Usa `ToolStrategy(ResponseFormat)` para forzar un formato de respuesta consistente
+6. **Structured output**
+   - Defines an output schema using dataclasses (e.g., `ResponseFormat`)
+   - Uses `ToolStrategy(ResponseFormat)` to enforce a consistent response format
 
-7. **Memoria de conversación**
-   - Añade memoria en RAM con `InMemorySaver` (LangGraph checkpointer)
-   - Permite conversaciones multi-turn manteniendo el historial por `thread_id`
+7. **Conversation memory**
+   - Adds in-memory state using `InMemorySaver` (LangGraph checkpointer)
+   - Enables multi-turn conversations while keeping history by `thread_id`
 
-8. **Ensamble final y prueba multi-turn**
-   - Junta modelo + tools + prompt + contexto + response format + memoria
-   - Ejecuta una conversación de dos turnos reutilizando el mismo `thread_id`
+8. **Final assembly and multi-turn test**
+   - Combines model + tools + prompt + context + response format + memory
+   - Runs a two-turn conversation reusing the same `thread_id`
 
-## Requisitos
+## Requirements
 
-- Python (el notebook indica un entorno tipo `.venv`)
-- **Ollama instalado y corriendo** localmente: https://ollama.com/
-- Un modelo descargado en Ollama (ejemplo usado en el notebook: `qwen2.5:7b`)
+- Python (the notebook suggests a `.venv`-style environment)
+- **Ollama installed and running** locally: https://ollama.com/
+- A model downloaded in Ollama (example used in the notebook: `qwen2.5:7b`)
 
-## Cómo ejecutar
+## How to run
 
-1. Clona el repositorio:
+1. Clone the repository:
    ```bash
    git clone https://github.com/miguelvanegas-c/LLMImplementation.git
    cd LLMImplementation
    ```
 
-2. (Opcional) crea y activa un entorno virtual.
+2. (Optional) create and activate a virtual environment.
 
-3. Abre y ejecuta el notebook:
+3. Open and run the notebook:
    - `LLMChainTutorial.ipynb`
 
-4. Asegúrate de tener Ollama activo y el modelo disponible. Por ejemplo:
+4. Make sure Ollama is running and the model is available. For example:
    ```bash
    ollama list
-   # si no tienes el modelo:
+   # if you do not have the model:
    ollama pull qwen2.5:7b
    ```
 
-## Notas importantes (Claude vs Ollama)
+## Important Notes (Claude vs Ollama)
 
-- Este proyecto **no usa Claude**.
-- La razón principal es que **Claude requiere API key de pago** para llamadas reales.
-- En su lugar, se usa **Ollama** para ejecutar modelos localmente, lo que permite experimentar con LangChain sin depender de proveedores pagos.
+- This project **does not use Claude**.
+- The main reason is that **Claude requires a paid API key** for real calls.
+- Instead, it uses **Ollama** to run models locally, allowing you to experiment with LangChain without relying on paid providers.
 
-## Referencias
+## References
 
-- Tutorial base (LangChain Quickstart / LLM Chain):
+- Base tutorial (LangChain Quickstart / LLM Chain):
   https://docs.langchain.com/oss/python/langchain/quickstart
 - Ollama:
   https://ollama.com/
